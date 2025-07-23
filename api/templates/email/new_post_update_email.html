@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        header, footer {
+            background-color: #d2cad8;
+            color: #887298;
+            padding: 10px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            direction: rtl;
+            padding: 20px;
+            color: #829872;
+        }
+        a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        p, h1, h3, h5 {
+            text-align: right;
+            font-family: Tahoma, Geneva, Verdana, sans-serif;
+            margin-right: 4rem;
+            color: #39332b;
+        }
+    </style>
+</head>
+<body dir="rtl">
+<header>
+    <img src="https://i.imghippo.com/files/IWwF3176QP.png" alt="Logo" style="max-width: 300px; height: auto;">
+</header>
+    <h1 style="font-family: Tahoma, Geneva, Verdana, sans-serif; margin-right: 4rem;">جدیدترین پست</h1>
+    <br>
+    <h3 style="font-family: Tahoma, Geneva, Verdana, sans-serif; margin-right: 4rem;">سلام،</h3>
+    <p>
+        جدیدترین پست ما با عنوان <strong>{{ post_title }}</strong> منتشر شده است.
+    </p>
+    <p>خلاصه‌ای از پست:</p>
+    <div style="background-color: #f9f9f9; border-right: 4px solid #ccc; padding: 10px; margin: 10px 0;">
+        {{ post_description|safe }}
+    </div>
+    <p>برای مشاهده کامل پست و مطالب بیشتر، لطفاً روی این <a href="{{ post_link }}">لینک</a> کلیک کنید.</p>
+    <p>منتظر دیدار شما هستیم!</p>
+    <h5 style="font-family: Tahoma, Geneva, Verdana, sans-serif; margin-right: 4rem;">
+        با احترام،
+        <br>
+        تیم شهر زنان کارآفرین
+    </h5>
+<footer>
+    <div class="row" style="display: flex;">
+        <div class="col">
+            <img src="https://i.imghippo.com/files/zsrG9131hdY.png" alt="Logo" style="max-width: 50px; height: auto;">
+        </div>
+        <div class="col" style="margin-top: 10px;">
+            <h6 style=" margin: 3px;">
+                <a href="{{ unsubscribe_url }}" style="color: #2c2c2c; text-decoration: none;">قطع اشتراک</a>
+            </h6>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
