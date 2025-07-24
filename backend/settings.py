@@ -25,11 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-%43v^qi*3&pjm*6m=i-1x6bk%aj)s=!%zw1k!9g1)d)lxlrzxc')
+SECRET_KEY = 'django-insecure-%43v^qi*3&pjm*6m=i-1x6bk%aj)s=!%zw1k!9g1)d)lxlrzxc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
 
 # Add this to correctly detect HTTPS when behind a proxy (like localtunnel)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -41,6 +42,7 @@ CSRF_COOKIE_SECURE = True
 # Set SameSite attribute for cookies to avoid warnings
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
+
 
 # Application definition
 
@@ -65,7 +67,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -158,7 +159,6 @@ FROM_EMAIL = "no-reply@yourdomain.com"
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -307,5 +307,5 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 # Frontend base URL for password reset link
-FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:5173')
+FRONTEND_BASE_URL = "http://localhost:5173"
 
