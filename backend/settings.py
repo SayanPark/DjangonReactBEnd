@@ -104,11 +104,11 @@ import dj_database_url
 
 import os
 
-DATABASES = dj_database_url.config(
-    default=os.environ.get('DATABASE_URL')
-)
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-if not DATABASES:
+if DATABASE_URL:
+    DATABASES = dj_database_url.config(default=DATABASE_URL)
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
