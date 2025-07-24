@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 import os
-
-# Monkey patch to fix drf_yasg lazy translation __proxy__ error
 import api.monkey_patch_drf_yasg_lazy_translation
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%43v^qi*3&pjm*6m=i-1x6bk%aj)s=!%zw1k!9g1)d)lxlrzxc'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-%43v^qi*3&pjm*6m=i-1x6bk%aj)s=!%zw1k!9g1)d)lxlrzxc')
 
-ALLOWED_HOSTS = ['*']
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # Add this to correctly detect HTTPS when behind a proxy (like localtunnel)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -67,6 +66,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -100,16 +100,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SZKblog',
-        'USER': 'postgres',
-        'PASSWORD': 'S@y@n248',
-        'HOST': 'localhost',
-        'PORT': '5432',
+import dj_database_url
+
+DATABASES = dj_database_url.config(
+    default=None,
+)
+
+if not DATABASES:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'SZKblog',
+            'USER': 'postgres',
+            'PASSWORD': 'S@y@n248',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
 
 
 
@@ -206,11 +213,9 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-# ]
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://sayanpark.github.io').split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -270,7 +275,6 @@ JAZZMIN_SETTINGS = {
         "auth.group": "vertical_tabs",
     },
 }
-
 
 # Jazzmin Tweaks
 
