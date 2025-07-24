@@ -219,7 +219,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = False
 
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://sayanpark.github.io,DjangonReact,https://backendszk-o5pq.onrender.com').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://backendszk-o5pq.onrender.com').split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 
