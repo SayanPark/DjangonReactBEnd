@@ -10,6 +10,11 @@ def main():
         print("Please set the REMOTE_DATABASE_URL environment variable to your remote database URL.")
         sys.exit(1)
 
+    # Add the project root directory to sys.path to fix ModuleNotFoundError
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+
     # Set the DATABASE_URL environment variable for Django settings
     os.environ['DATABASE_URL'] = remote_db_url
 
