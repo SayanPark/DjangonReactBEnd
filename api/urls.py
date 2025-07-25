@@ -1,6 +1,15 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from api import views as api_views
+from django.http import JsonResponse
+from django.core.management import call_command
+
+def run_migrations(request):
+    try:
+        call_command('migrate')
+        return JsonResponse({'message': 'Migrations completed successfully.'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 urlpatterns = [
     # Userauths API Endpoints
@@ -41,4 +50,6 @@ urlpatterns = [
     path('contact-message/create/', api_views.ContactMessageCreateAPIView.as_view()),
     path('contact-message/list/', api_views.ContactMessageListAPIView.as_view()),
     path('contact-message/reply/', api_views.ContactMessageReplyAPIView.as_view()),
+    # Migration trigger endpoint
+    path('run-migrations/', run_migrations),
 ]
