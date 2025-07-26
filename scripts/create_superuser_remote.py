@@ -15,6 +15,18 @@ def main():
     if backend_dir not in sys.path:
         sys.path.insert(0, backend_dir)
 
+    # Replace internal hostname with external hostname if present
+    if "dpg-d21515ripnbc73dvmll0-a/" in remote_db_url:
+        remote_db_url = remote_db_url.replace(
+            "dpg-d21515ripnbc73dvmll0-a/",
+            "dpg-d21515ripnbc73dvmll0-a.oregon-postgres.render.com/"
+        )
+    elif "dpg-d21515ripnbc73dvmll0-a" in remote_db_url and "dpg-d21515ripnbc73dvmll0-a.oregon-postgres.render.com" not in remote_db_url:
+        remote_db_url = remote_db_url.replace(
+            "dpg-d21515ripnbc73dvmll0-a",
+            "dpg-d21515ripnbc73dvmll0-a.oregon-postgres.render.com"
+        )
+
     # Set the DATABASE_URL environment variable for Django settings
     os.environ['DATABASE_URL'] = remote_db_url
 
