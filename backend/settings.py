@@ -171,6 +171,11 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+WHITENOISE_MIMETYPES = {
+    '.js': 'application/javascript',
+    '.min.js': 'application/javascript',
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
