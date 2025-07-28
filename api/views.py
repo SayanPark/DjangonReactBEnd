@@ -847,3 +847,20 @@ def send_new_post_update_email(request):
     "category_id": 1,
     "post_status": "Active"
 }
+
+from django.views.generic import View
+from django.http import FileResponse, Http404
+from pathlib import Path
+from django.conf import settings
+
+class FrontendAppView(View):
+    """
+    Serves the compiled frontend's index.html file for SPA routing.
+    """
+    def get(self, request, *args, **kwargs):
+        frontend_dir = settings.STATICFILES_DIRS[0]
+        index_file = frontend_dir / 'index.html'
+        if index_file.exists():
+            return FileResponse(open(index_file, 'rb'))
+        else:
+            raise Http404("Frontend build not found")

@@ -171,6 +171,11 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Add frontend build directory to static files dirs
+STATICFILES_DIRS = [
+    BASE_DIR.parent / 'frontend' / 'dist',
+]
+
 WHITENOISE_MIMETYPES = {
     '.js': 'application/javascript',
     '.min.js': 'application/javascript',
