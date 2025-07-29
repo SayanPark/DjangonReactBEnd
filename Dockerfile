@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y build-essential libpq-dev && rm -rf /va
 # Install Python dependencies
 COPY requirements.txt /app/
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --timeout=100 --retries=10 --no-cache-dir --resume-retries=5 -r requirements.txt
 
 # Copy backend code
 COPY . /app/
