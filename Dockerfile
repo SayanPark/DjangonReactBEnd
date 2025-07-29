@@ -12,12 +12,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY backend/requirements.txt /app/
+COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy backend code
-COPY backend/ /app/
+COPY . /app/
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
