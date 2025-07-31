@@ -15,7 +15,6 @@ from datetime import timedelta
 import dj_database_url
 import os
 import sys
-import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import api.monkey_patch_drf_yasg_lazy_translation
