@@ -80,7 +80,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend.backend.urls'
+ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
@@ -117,10 +117,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'SZKblog',
-            'USER': 'postgres',
-            'PASSWORD': 'S@y@n248',
-            'HOST': 'localhost',
+            'NAME': 'szk_psql_db',
+            'USER': 'szk_psql_db_user',
+            'PASSWORD': 'wScSnvAqLBeJ681D7wYATZsFb98vVqYd',
+            'HOST': 'dpg-d256ji1r0fns73dp8da0-a.oregon-postgres.render.com',
             'PORT': '5432',
         }
     }
