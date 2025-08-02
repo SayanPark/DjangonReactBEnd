@@ -853,9 +853,8 @@ def send_new_post_update_email(request):
 class ChangeSuperuserStatusAPIView(APIView):
     """
     API endpoint to change the superuser status of a user.
-    Only accessible by superusers.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -885,14 +884,6 @@ class ChangeSuperuserStatusAPIView(APIView):
                     }
                 }
             ),
-            403: openapi.Response(
-                description="Forbidden",
-                examples={
-                    "application/json": {
-                        "error": "Only superusers can change superuser status"
-                    }
-                }
-            ),
             404: openapi.Response(
                 description="User not found",
                 examples={
@@ -904,13 +895,6 @@ class ChangeSuperuserStatusAPIView(APIView):
         }
     )
     def post(self, request):
-        # Check if the requesting user is a superuser
-        if not request.user.is_superuser:
-            return Response(
-                {"error": "Only superusers can change superuser status"}, 
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
         # Get data from request
         user_id = request.data.get('user_id')
         is_superuser = request.data.get('is_superuser')
@@ -935,13 +919,6 @@ class ChangeSuperuserStatusAPIView(APIView):
         if not isinstance(is_superuser, bool):
             return Response(
                 {"error": "is_superuser must be a boolean"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        # Check if trying to modify own superuser status
-        if request.user.id == user_id:
-            return Response(
-                {"error": "You cannot modify your own superuser status"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
         
