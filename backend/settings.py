@@ -80,7 +80,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'backend.backend.urls'
+ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
@@ -103,17 +103,26 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-import dj_database_url
-
-import os
-
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
     }
+elif DEBUG:
+    # database of localhost development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'SZKblog',
+            'USER': 'postgres',
+            'PASSWORD': 'S@y@n248',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 else:
+    # database of render.com development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
