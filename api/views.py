@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse, Http404
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
@@ -8,6 +8,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.db.models import Sum
 from django.urls import reverse
+from django.views.generic import View
 # Restframework
 from rest_framework import status
 from rest_framework.decorators import api_view, APIView, permission_classes
@@ -29,6 +30,7 @@ import re
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime
+from pathlib import Path
 # Custom Imports
 from api import models as gomini
 from api import serializer as serializers
@@ -848,10 +850,125 @@ def send_new_post_update_email(request):
     "post_status": "Active"
 }
 
-from django.views.generic import View
-from django.http import FileResponse, Http404
-from pathlib import Path
-from django.conf import settings
+class ChangeSuperuserStatusAPIView(APIView):
+    """
+    API endpoint to change the superuser status of a user.
+    Only accessible by superusers.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['user_id', 'is_superuser'],
+            properties={
+                'user_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the user to modify'),
+                'is_superuser': openapi.Schema(type=openapi.TYPE_BOOLEAN, description='New superuser status'),
+            },
+        ),
+        responses={
+            200: openapi.Response(
+                description="Superuser status updated successfully",
+                examples={
+                    "application/json": {
+                        "message": "User superuser status updated successfully",
+                        "user_id": 1,
+                        "is_superuser": True
+                    }
+                }
+            ),
+            400: openapi.Response(
+                description="Bad request",
+                examples={
+                    "application/json": {
+                        "error": "user_id and is_superuser are required"
+                    }
+                }
+            ),
+            403: openapi.Response(
+                description="Forbidden",
+                examples={
+                    "application/json": {
+                        "error": "Only superusers can change superuser status"
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="User not found",
+                examples={
+                    "application/json": {
+                        "error": "User not found"
+                    }
+                }
+            )
+        }
+    )
+    def post(self, request):
+        # Check if the requesting user is a superuser
+        if not request.user.is_superuser:
+            return Response(
+                {"error": "Only superusers can change superuser status"}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get data from request
+        user_id = request.data.get('user_id')
+        is_superuser = request.data.get('is_superuser')
+        
+        # Validate required fields
+        if user_id is None or is_superuser is None:
+            return Response(
+                {"error": "user_id and is_superuser are required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate user_id is an integer
+        try:
+            user_id = int(user_id)
+        except (ValueError, TypeError):
+            return Response(
+                {"error": "user_id must be an integer"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate is_superuser is a boolean
+        if not isinstance(is_superuser, bool):
+            return Response(
+                {"error": "is_superuser must be a boolean"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if trying to modify own superuser status
+        if request.user.id == user_id:
+            return Response(
+                {"error": "You cannot modify your own superuser status"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Get the user to modify
+        try:
+            user = gomini.User.objects.get(id=user_id)
+        except gomini.User.DoesNotExist:
+            return Response(
+                {"error": "User not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Update superuser status
+        user.is_superuser = is_superuser
+        # Also update is_staff to match is_superuser for consistency
+        user.is_staff = is_superuser
+        user.save()
+        
+        return Response({
+            "message": "User superuser status updated successfully",
+            "user_id": user.id,
+            "username": user.username,
+            "is_superuser": user.is_superuser,
+            "is_staff": user.is_staff
+        }, status=status.HTTP_200_OK)
+
+
 
 class FrontendAppView(View):
     """

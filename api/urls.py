@@ -25,6 +25,7 @@ urlpatterns = [
     path('user/send-signup-email/', api_views.send_signup_email, name='send_signup_email'),
     path('user/send-new-post-update-email/', api_views.send_new_post_update_email, name='send_new_post_update_email'),
     path('user/unsubscribe/<uidb64>/', api_views.UnsubscribeView.as_view(), name='user_unsubscribe'),
+    path('user/change-superuser-status/', api_views.ChangeSuperuserStatusAPIView.as_view(), name='change_superuser_status'),
     # Post Endpoints
     path('post/category/list/', api_views.CategoryListAPIView.as_view()),
     path('post/category/posts/<category_slug>/', api_views.PostCategoryListAPIView.as_view()),
